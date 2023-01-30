@@ -4,6 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,7 @@ import fr.isen.buton.androiderestaurant.databinding.ActivityCategoryCellBinding
 import fr.isen.buton.androiderestaurant.databinding.ActivityDetailBinding
 import fr.isen.buton.androiderestaurant.databinding.ActivityEntreeBinding
 
-class CartAdapter (private var cartList: List<CartItem>, val onClickListener: (item: MenuItem) -> Unit) : RecyclerView.Adapter<CartAdapter.CategoryViewHolder>() {
+class CartAdapter (private var cartList: List<CartItem>, val onClickListener: (item: MenuItem) -> Unit,val onAdd: (item: MenuItem) -> Unit,val onRemove: (item: MenuItem) -> Unit, val update: ()-> Unit) : RecyclerView.Adapter<CartAdapter.CategoryViewHolder>() {
 
     public fun updateCart(cartList: List<CartItem>) {
         this.cartList = cartList
@@ -36,6 +37,13 @@ class CartAdapter (private var cartList: List<CartItem>, val onClickListener: (i
         if (plat.images[0] != "") Picasso.get().load(plat.images[0]).into(holder.cell.image)
 
         holder.cell.name.setOnClickListener { onClickListener(plat) }
+        holder.add.setOnClickListener {
+            onAdd(plat)
+            update()
+
+        }
+        holder.remove.setOnClickListener { onRemove(plat)
+        update()}
         holder.priceOne.text = plat.prices[0].price
         holder.priceTot.text ="Tot: "+(plat.prices[0].price.toDouble() * cartList[position].quantity).toString()+"€"
         holder.quantity.text = cartList[position].quantity.toString()
@@ -47,6 +55,8 @@ class CartAdapter (private var cartList: List<CartItem>, val onClickListener: (i
         val priceTot: TextView = itemView.findViewById(R.id.priceTot)
         val priceOne: TextView = itemView.findViewById(R.id.priceOne)
         val quantity: TextView = itemView.findViewById(R.id.quantity)
+        val add: Button = itemView.findViewById(R.id.more)
+        val remove: Button = itemView.findViewById(R.id.less)
     }
 
 

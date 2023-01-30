@@ -40,6 +40,7 @@ class CartActivity : AppCompatActivity() {
             Log.i("Cart Activity", "Service connected")
 
             adapter?.updateCart(cartService.list.list)
+        //    CartAdapter(listOf(), toItem)
             binding.total.text = "Prix: "+cartService.price.toString()+" €"
 
 
@@ -63,7 +64,6 @@ class CartActivity : AppCompatActivity() {
         binding = ActivityCartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         var toItem = fun(plat: MenuItem) {
             val i = Intent(this@CartActivity, DetailActivity::class.java)
             i.putExtra("plat", Gson().toJson(plat))
@@ -80,12 +80,23 @@ class CartActivity : AppCompatActivity() {
         }
         recyView = binding.basketList
         recyView.layoutManager = LinearLayoutManager(this)
-        adapter = CartAdapter(listOf(), toItem)
+        adapter = CartAdapter(listOf(), toItem,add, remove, update)
         recyView.adapter = adapter
 
 
 
     }
 
+   var add = fun(item: MenuItem) {
+        cartService.addItem(item)
+        Log.i("Cart Activity", "Add item")
+    }
+    var remove= fun(item: MenuItem) {
+        cartService.removeItem(item)
+    }
+    var update = fun() {
+        adapter?.updateCart(cartService.list.list)
+        binding.total.text = "Prix: "+cartService.price.toString()+" €"
+    }
 
 }
