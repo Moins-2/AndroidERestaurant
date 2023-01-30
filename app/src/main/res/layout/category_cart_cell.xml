@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include
+        android:id="@+id/cell"
+        layout="@layout/activity_category_cell"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/priceTot"
+        android:layout_width="85dp"
+        android:layout_height="21dp"
+        android:text="Tot: XX€"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/cell"
+        app:layout_constraintEnd_toEndOf="@+id/cell"
+        app:layout_constraintHorizontal_bias="0.952"
+        app:layout_constraintStart_toStartOf="@+id/cell"
+        app:layout_constraintTop_toTopOf="@+id/cell"
+        app:layout_constraintVertical_bias="0.932" />
+
+    <TextView
+        android:id="@+id/priceOne"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="XX€"
+        app:layout_constraintBottom_toBottomOf="@+id/cell"
+        app:layout_constraintEnd_toEndOf="@+id/cell"
+        app:layout_constraintHorizontal_bias="0.96"
+        app:layout_constraintStart_toStartOf="@+id/cell"
+        app:layout_constraintTop_toTopOf="@+id/cell"
+        app:layout_constraintVertical_bias="0.115" />
+
+    <TextView
+        android:id="@+id/quantity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="X"
+        app:layout_constraintBottom_toBottomOf="@+id/less"
+        app:layout_constraintEnd_toStartOf="@+id/less2"
+        app:layout_constraintStart_toEndOf="@+id/less"
+        app:layout_constraintTop_toTopOf="@+id/less" />
+
+    <Button
+        android:id="@+id/less"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="144dp"
+        android:layout_marginBottom="8dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:text="-"
+        app:cornerRadius="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cell"
+        app:layout_constraintEnd_toStartOf="@+id/less2"
+        app:layout_constraintHorizontal_bias="0.264"
+        app:layout_constraintStart_toStartOf="@+id/cell" />
+
+    <Button
+        android:id="@+id/less2"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="8dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:text="+"
+        app:cornerRadius="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cell"
+        app:layout_constraintEnd_toStartOf="@+id/priceTot" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,8 @@
     <string name="entree1">Plat1</string>
     <string name="entree2">Plat2</string>
     <string name="entree3">Plat3</string>
-
+    <string name="cartMin">Prix: XX€ (X)</string>
+    <string name="cartPrice">Prix: XX€</string>
+    <string name="cartTitle">Panier</string>
 
 </resources>

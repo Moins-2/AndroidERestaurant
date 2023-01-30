@@ -1,12 +1,13 @@
 package fr.isen.buton.androiderestaurant
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
-import android.util.LogPrinter
-import android.widget.Button
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.Response
@@ -15,14 +16,37 @@ import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import fr.isen.buton.androiderestaurant.databinding.ActivityHomeBinding
 import org.json.JSONObject
-import java.util.logging.Logger
-import kotlin.math.log
 
 class HomeActivity : AppCompatActivity() {
 
-    val log = Logger.getLogger(HomeActivity::class.java.name)
     private lateinit var binding: ActivityHomeBinding
 
+    private lateinit var mService: CartService
+    private var mBound: Boolean = false
+
+    /** Defines callbacks for service binding, passed to bindService()  */
+    private val connection = object : ServiceConnection {
+
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            val binder = service as CartService.LocalBinder
+            mService = binder.getService()
+            mService.setContext(this@HomeActivity)
+            mBound = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            mBound = false
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Bind to LocalService
+        Intent(this, CartService::class.java).also { intent ->
+            bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
@@ -30,41 +54,28 @@ class HomeActivity : AppCompatActivity() {
         setContentView(view)
 
         getMenu()
-
     }
 
     private  fun getMenu(){
-        val queue = Volley.newRequestQueue(this)
-        val url = "http://test.api.catering.bluecodegames.com/menu"
         val jsonObject = JSONObject()
         jsonObject.put("id_shop", "1")
         val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.POST, url, jsonObject,
-            Response.Listener { response ->
-               // add Gson and log it
-                val gson = Gson()
-                val menu = gson.fromJson(response.toString(), MenuResponse::class.java)
-                updateData(menu)
-
-            },
-            Response.ErrorListener { error ->
-                Log.e("api", "Error: ${error.message}")
-            }
+            Request.Method.POST, "http://test.api.catering.bluecodegames.com/menu", jsonObject,
+            Response.Listener { response -> updateData(Gson().fromJson(response.toString(), MenuResponse::class.java)) },
+            Response.ErrorListener { error -> Log.e("api", "Error: ${error.message}") }
         )
-        queue.add(jsonObjectRequest)
+
+        Volley.newRequestQueue(this).add(jsonObjectRequest)
     }
 
     private fun updateData(data: MenuResponse){
-        val myFunc = fun(menu: MenuData) {
+        val toCategory = fun(menu: MenuData) {
             val i = Intent(this@HomeActivity, EntreeActivity::class.java)
-            val gson = Gson()
-            i.putExtra("menu",gson.toJson(menu))
+            i.putExtra("menu",Gson().toJson(menu))
             startActivity(i)
-
         }
-        val adapter = MenuAdapter(data, myFunc)
         val recyView = binding.listMenu
-        recyView.adapter = adapter
+        recyView.adapter = MenuAdapter(data, toCategory)
         recyView.layoutManager = LinearLayoutManager(this)
     }
 
